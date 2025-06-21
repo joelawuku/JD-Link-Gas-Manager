@@ -190,3 +190,4 @@ elif menu == "Litres Left":
         st.write(f"**📥 % of Bulk Truck Used to Fill Station Tank:** {percent_of_truck_used:.2f}%")
         st.write(f"**🚚 Litres Left in Truck After Offload:** {final_truck_litres:,.2f} L")
         st.write(f"**Truck Rotor % After Offload:** {final_truck_percent:.2f}%")
+        
