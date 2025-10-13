@@ -123,10 +123,10 @@ elif menu == "Litres Sold":
 
         col3, col4 = st.columns(2)
         with col3:
-            rotor_initial = st.number_input("Initial Rotor %", min_value=0.0, max_value=200.0, step=0.1, format="%.2f")
+            rotor_initial = st.number_input("Initial Rotor %", min_value=0.0, max_value=900.0, step=0.1, format="%.2f")
             tank_capacity = st.number_input("Tank Capacity (L)", min_value=0.0, step=1.0, format="%.2f")
         with col4:
-            rotor_final = st.number_input("Final Rotor %", min_value=0.0, max_value=100.0, step=0.1, format="%.2f")
+            rotor_final = st.number_input("Final Rotor %", min_value=0.0, max_value=900.0, step=0.1, format="%.2f")
             density = st.number_input("LPG Density (kg/L)", min_value=0.01, value=0.54, step=0.01, format="%.3f")
 
         submitted = st.form_submit_button("Calculate")
