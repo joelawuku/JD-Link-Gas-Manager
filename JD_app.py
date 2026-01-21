@@ -123,7 +123,7 @@ elif menu == "Litres Sold":
 
         col3, col4 = st.columns(2)
         with col3:
-            rotor_initial = st.number_input("Initial Rotor %", min_value=0.0, max_value=100.0, step=0.1, format="%.2f")
+            rotor_initial = st.number_input("Initial Rotor %", min_value=0.0, max_value=400.0, step=0.1, format="%.2f")
             tank_capacity = st.number_input("Tank Capacity (L)", min_value=0.0, step=1.0, format="%.2f")
         with col4:
             rotor_final = st.number_input("Final Rotor %", min_value=0.0, max_value=100.0, step=0.1, format="%.2f")
