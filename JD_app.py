@@ -107,7 +107,7 @@ elif menu == "Litres Sold":
         st.markdown("""
         - Fill in **initial and final readings** for both pumps.
         - Enter **rotor % before and after**, tank capacity, and LPG density.
-        - The table compares **actual litres sold vs expected (theoretical)**.
+        - Review summaries as before, plus a **comparison table** below.
         """)
 
     with st.form("litres_sold_form"):
@@ -132,47 +132,64 @@ elif menu == "Litres Sold":
         submitted = st.form_submit_button("Calculate")
 
     if submitted:
-        # Actual sold
+        # Existing calculations (unchanged)
         pump1_sold = pump1_final - pump1_initial
         pump2_sold = pump2_final - pump2_initial
         total_dispensed = pump1_sold + pump2_sold
 
-        # Expected (theoretical)
         rotor_diff = rotor_initial - rotor_final
-        expected_litres = (rotor_diff / 100.0) * tank_capacity
-        expected_kg = expected_litres * density
+        theoretical_litres = (rotor_diff / 100.0) * tank_capacity
+        theoretical_kg = theoretical_litres * density
+        theoretical_tons = theoretical_kg / 1000
 
-        variance_litres = total_dispensed - expected_litres
+        dispensed_kg = total_dispensed * density
+        dispensed_tons = dispensed_kg / 1000
 
-        # Comparison table
+        variance_litres = total_dispensed - theoretical_litres
+
+        # Existing output (kept)
+        st.success("✅ Calculations Complete")
+        st.markdown("### 🔍 Dispenser Summary")
+        st.write(f"**Pump 1 Sold:** {pump1_sold:.2f} L")
+        st.write(f"**Pump 2 Sold:** {pump2_sold:.2f} L")
+        st.write(f"**Total Dispensed:** {total_dispensed:.2f} L")
+
+        st.markdown("### 📊 Rotor Gauge Summary")
+        st.write(f"**Rotor Difference:** {rotor_diff:.2f}%")
+        st.write(f"**Theoretical Litres Sold:** {theoretical_litres:.2f} L")
+        st.write(f"**Mass Sold (kg):** {theoretical_kg:.2f} kg")
+
+        st.markdown("### ⚠️ Variance Check")
+        if variance_litres > 0:
+            st.success(f"**Overage:** {variance_litres:.2f} L 📈🟢")
+        elif variance_litres < 0:
+            st.error(f"**Shortage:** {abs(variance_litres):.2f} L 📉🔴")
+        else:
+            st.info("**Status:** ✅ Balanced — No variance detected.")
+
+        # 🔽 NEW: Comparison Table (Added Only)
         comparison_df = pd.DataFrame({
-            "Metric": [
-                "Pump 1 Sold (L)",
-                "Pump 2 Sold (L)",
-                "Total Dispensed (L)",
-                "Expected from Tank (L)",
-                "Variance (L)"
-            ],
-            "Value": [
-                round(pump1_sold, 2),
-                round(pump2_sold, 2),
+            "Metric": ["Litres (L)", "Mass (kg)", "Mass (tons)"],
+            "Total Dispensed": [
                 round(total_dispensed, 2),
-                round(expected_litres, 2),
-                round(variance_litres, 2)
+                round(dispensed_kg, 2),
+                round(dispensed_tons, 3)
+            ],
+            "Expected (Tank)": [
+                round(theoretical_litres, 2),
+                round(theoretical_kg, 2),
+                round(theoretical_tons, 3)
+            ],
+            "Variance": [
+                round(total_dispensed - theoretical_litres, 2),
+                round(dispensed_kg - theoretical_kg, 2),
+                round(dispensed_tons - theoretical_tons, 3)
             ]
         })
 
-        st.success("✅ Calculations Complete")
-        st.markdown("### 📋 Sold vs Expected Comparison")
+        st.markdown("### 📋 Sold vs Expected Comparison Table")
         st.dataframe(comparison_df, use_container_width=True)
 
-        # Variance status
-        if variance_litres > 0:
-            st.success(f"🟢 Overage: {variance_litres:.2f} L")
-        elif variance_litres < 0:
-            st.error(f"🔴 Shortage: {abs(variance_litres):.2f} L")
-        else:
-            st.info("✅ Balanced — No variance detected.")
 
 
 # Offload
